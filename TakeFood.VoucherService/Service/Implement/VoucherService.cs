@@ -50,6 +50,7 @@ public class VouchersService : IVoucherService
             Description = dto.Description,
             MaxDiscount = dto.MaxDiscount,
             MinSpend = dto.MinSpend,
+            Name = dto.Name,
             Type = false
         };
 
