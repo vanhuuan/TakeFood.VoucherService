@@ -1,5 +1,4 @@
-﻿using StoreService.Utilities.Converter;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace TakeFood.VoucherService.ViewModel.Dtos.Voucher;
@@ -24,12 +23,6 @@ public class CreateVoucherDto
     [JsonPropertyName("amount")]
     [Required]
     public Double Amount { get; set; }
-    /// <summary>
-    /// Voucher type: True is shop, false is system
-    /// </summary>
-    [JsonPropertyName("type")]
-    [Required]
-    public bool Type { get; set; }
     [JsonPropertyName("maxDiscount")]
     [Required]
     public Double MaxDiscount { get; set; }
@@ -73,12 +66,6 @@ public class UpdateVoucherDto
     [JsonPropertyName("amount")]
     [Required]
     public Double Amount { get; set; }
-    /// <summary>
-    /// Voucher type: True is shop, false is system
-    /// </summary>
-    [JsonPropertyName("type")]
-    [Required]
-    public bool Type { get; set; }
     [JsonPropertyName("maxDiscount")]
     [Required]
     public Double MaxDiscount { get; set; }

@@ -16,7 +16,7 @@ public class VouchersService : IVoucherService
         this.voucherRepository = voucherRepository;
         this.storeRepository = storeRepository;
     }
-    public async Task CreateVoucherAsync(CreateVoucherDto dto,string ownerId)
+    public async Task CreateVoucherAsync(CreateVoucherDto dto, string ownerId)
     {
         var store = await storeRepository.FindByIdAsync(dto.StoreId);
         if (store == null || store.OwnerId != ownerId)
@@ -50,7 +50,7 @@ public class VouchersService : IVoucherService
             Description = dto.Description,
             MaxDiscount = dto.MaxDiscount,
             MinSpend = dto.MinSpend,
-            Type = dto.Type
+            Type = false
         };
 
         await voucherRepository.InsertAsync(voucher);
@@ -59,9 +59,9 @@ public class VouchersService : IVoucherService
     public async Task<List<VoucherCardDto>> GetAllStoreVoucherOkeAsync(string storeId)
     {
         var now = DateTime.Now;
-        var listVoucher = await voucherRepository.FindAsync(x => x.StoreId == storeId/* && x.StartDay <= now && x.ExpireDay <= now*/);
+        var listVoucher = await voucherRepository.FindAsync(x => (x.StoreId == storeId && x.StartDay <= now && x.ExpireDay <= now) || x.Type == true); // Lay voucher cua cua hang hoac voucher cua he thong
         var rs = new List<VoucherCardDto>();
-        foreach(var voucher in listVoucher)
+        foreach (var voucher in listVoucher)
         {
             rs.Add(new VoucherCardDto()
             {
