@@ -1,11 +1,16 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace TakeFood.VoucherService.ViewModel.Dtos.Voucher;
 
 public class VoucherCardDto
 {
+    /// <summary>
+    /// Voucher Id
+    /// </summary>
+    [JsonPropertyName("voucherId")]
+    [Required]
+    public string VoucherId { get; set; }
     /// <summary>
     /// Voucher name
     /// </summary>

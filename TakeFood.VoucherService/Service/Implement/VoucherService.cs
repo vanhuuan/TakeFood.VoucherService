@@ -71,6 +71,7 @@ public class VouchersService : IVoucherService
                 Amount = voucher.Amount,
                 Description = voucher.Description,
                 Name = voucher.Name,
+                VoucherId = voucher.Id
             });
         }
         return rs;
@@ -84,7 +85,7 @@ public class VouchersService : IVoucherService
             throw new Exception("You're not the owner or store not exist");
         }
 
-        if (dto.StartDay < DateTime.Now || dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
+        if (dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
         {
             throw new Exception("Unexecpted Datetime");
         }
