@@ -54,11 +54,10 @@ public partial class MongoRepository<T>
     /// <param name="id"></param>
     /// <param name="deleteBy">Delete by</param>
     /// <returns></returns>
-    public async Task<bool> DeleteAsync(string id, BaseUpdateUserModel deleteBy)
+    public async Task<bool> DeleteAsync(string id)
     {
-        var updateDefinition = CreateDeleted(deleteBy);
-        var updated = await Collection.UpdateOneAsync(e => e.Id.Equals(id), updateDefinition);
-        return updated.MatchedCount == 1;
+        var updated = await Collection.FindOneAndUpdateAsync(e => e.Id.Equals(id), Builders<T>.Update.Set(x => x.IsDeleted, true));
+        return updated.IsDeleted == true;
     }
 
     /// <summary>

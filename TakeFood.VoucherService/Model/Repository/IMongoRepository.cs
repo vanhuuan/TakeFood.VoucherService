@@ -1,9 +1,9 @@
 ﻿using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using System.Linq.Expressions;
-using TakeFood.VoucherService.Model.Content;
 using StoreService.Model.Entities;
 using StoreService.Utilities;
+using System.Linq.Expressions;
+using TakeFood.VoucherService.Model.Content;
 using static StoreService.Model.Repository.IRepository;
 
 namespace StoreService.Model.Repository;
@@ -125,7 +125,7 @@ public interface IMongoRepository<T> : IRepository<T>
     /// <param name="id"></param>
     /// <param name="deleteBy">Delete by</param>
     /// <returns></returns>
-    Task<bool> DeleteAsync(string id, BaseUpdateUserModel deleteBy);
+    Task<bool> DeleteAsync(string id);
 
     /// <summary>
     /// Delete many items async

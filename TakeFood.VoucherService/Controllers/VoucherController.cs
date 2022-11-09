@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StoreService.Middleware;
-using StoreService.Model.Entities.Role;
 using StoreService.Service;
-using StoreService.Service.Implement;
 using System.ComponentModel.DataAnnotations;
 using TakeFood.VoucherService.Model.Entities;
 using TakeFood.VoucherService.Service;
-using TakeFood.VoucherService.Service.Implement;
 using TakeFood.VoucherService.ViewModel.Dtos.Voucher;
 
 namespace TakeFood.VoucherService.Controllers;
@@ -22,7 +19,7 @@ public class VoucherController : BaseController
     }
 
     [HttpPost]
-    [Authorize]
+    [Authorize(roles: Roles.ShopeOwner)]
     [Route("AddVoucher")]
     public async Task<IActionResult> AddVoucherAsync([FromBody] CreateVoucherDto dto)
     {
@@ -42,7 +39,7 @@ public class VoucherController : BaseController
     }
 
     [HttpPut]
-    [Authorize]
+    [Authorize(roles: Roles.ShopeOwner)]
     [Route("UpdateVoucher")]
     public async Task<IActionResult> UpdateVoucherAsync([FromBody] UpdateVoucherDto dto)
     {
@@ -84,7 +81,7 @@ public class VoucherController : BaseController
     [HttpGet]
     [Authorize(roles: Roles.ShopeOwner)]
     [Route("GetPagingVoucher")]
-    public async Task<IActionResult> GetPagingVoucherAsync(string storeId)
+    public async Task<IActionResult> GetPagingVoucherAsync(GetPagingVoucherDto dto)
     {
         try
         {
@@ -92,8 +89,28 @@ public class VoucherController : BaseController
             {
                 return BadRequest();
             }
-            var rs = await VoucherService.GetAllStoreVoucherOkeAsync(GetId());
+            var rs = await VoucherService.GetPagingVoucher(dto, GetId());
             return Ok(rs);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
+    [HttpDelete]
+    [Authorize(roles: Roles.ShopeOwner)]
+    [Route("DeleteVoucher")]
+    public async Task<IActionResult> GetPagingVoucherAsync([Required] string voucherId)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await VoucherService.DeleteVoucherAsync(voucherId, GetId());
+            return Ok();
         }
         catch (Exception e)
         {

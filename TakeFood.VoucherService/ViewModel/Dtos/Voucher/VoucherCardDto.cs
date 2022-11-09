@@ -18,6 +18,12 @@ public class VoucherCardDto
     [Required]
     public string Name { get; set; }
     /// <summary>
+    /// Voucher name
+    /// </summary>
+    [JsonPropertyName("code")]
+    [Required]
+    public string Code { get; set; }
+    /// <summary>
     /// Voucher description
     /// </summary>
     [JsonPropertyName("description")]
@@ -32,4 +38,12 @@ public class VoucherCardDto
     [JsonPropertyName("maxDiscount")]
     [Required]
     public Double MaxDiscount { get; set; }
+    [JsonPropertyName("startDate")]
+    public DateTime StartDate { get; set; }
+    [JsonPropertyName("endDate")]
+    public DateTime EndDate { get; set; }
+    [JsonPropertyName("createDate")]
+    public DateTime CreateDate { get; set; }
+    [JsonPropertyName("updateDate")]
+    public DateTime UpdateDate { get; set; }
 }

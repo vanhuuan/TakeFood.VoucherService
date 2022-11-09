@@ -1,4 +1,5 @@
-﻿using StoreService.Model.Entities.Store;
+﻿using MongoDB.Driver;
+using StoreService.Model.Entities.Store;
 using StoreService.Model.Entities.Voucher;
 using StoreService.Model.Repository;
 using TakeFood.VoucherService.ViewModel.Dtos.Voucher;
@@ -71,7 +72,10 @@ public class VouchersService : IVoucherService
                 Amount = voucher.Amount,
                 Description = voucher.Description,
                 Name = voucher.Name,
-                VoucherId = voucher.Id
+                VoucherId = voucher.Id,
+                StartDate = voucher.StartDay,
+                EndDate = voucher.ExpireDay,
+                Code = voucher.Code,
             });
         }
         return rs;
@@ -112,5 +116,65 @@ public class VouchersService : IVoucherService
         {
             throw new Exception("Voucher is not exist");
         }
+    }
+
+    public async Task<VoucherPagingResponse> GetPagingVoucher(GetPagingVoucherDto dto, string uid)
+    {
+        var store = await storeRepository.FindOneAsync(x => x.OwnerId == uid);
+        var filter = CreateFilter(dto.StartDate, dto.EndDate, dto.QueryString, dto.QueryType, store.Id);
+        var rs = await voucherRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
+        var list = new List<VoucherCardDto>();
+        foreach (var voucher in rs.Data)
+        {
+            list.Add(new VoucherCardDto()
+            {
+                MaxDiscount = voucher.MaxDiscount,
+                MinSpend = voucher.MinSpend,
+                Amount = voucher.Amount,
+                Description = voucher.Description,
+                Name = voucher.Name,
+                VoucherId = voucher.Id,
+                CreateDate = voucher.CreatedDate!.Value,
+                StartDate = voucher.StartDay,
+                EndDate = voucher.ExpireDay,
+                Code = voucher.Code,
+            });
+        }
+        var info = new VoucherPagingResponse()
+        {
+            Total = rs.Count,
+            PageIndex = dto.PageNumber,
+            PageSize = dto.PageSize,
+            Cards = list
+        };
+        return info;
+    }
+
+    private FilterDefinition<Voucher> CreateFilter(DateTime? startDate, DateTime? endDate, string query, string queryType, string storeId)
+    {
+        var filter = Builders<Voucher>.Filter.Eq(x => x.StoreId, storeId);
+        if (startDate != null && endDate != null)
+        {
+            filter &= Builders<Voucher>.Filter.Gte(x => x.StartDay, startDate);
+            filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, endDate);
+        }
+        switch (queryType)
+        {
+            case "Code": filter &= Builders<Voucher>.Filter.Where(x => x.Code.Contains(query)); break;
+            case "Name": filter &= Builders<Voucher>.Filter.Where(x => x.Name.Contains(query)); break;
+            default: filter &= Builders<Voucher>.Filter.StringIn(x => x.Code, query); break;
+        }
+        return filter;
+    }
+
+    public async Task DeleteVoucherAsync(string voucherId, string ownerId)
+    {
+        var store = await storeRepository.FindOneAsync(x => x.OwnerId == ownerId);
+        var voucher = await voucherRepository.FindByIdAsync(voucherId);
+        if (store.Id != voucher.StoreId)
+        {
+            throw new Exception("Can't delete voucher");
+        }
+        await voucherRepository.DeleteAsync(voucher);
     }
 }
