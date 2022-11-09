@@ -77,6 +77,12 @@ public class VoucherController : BaseController
             return BadRequest(e.Message);
         }
     }
+    /// <summary>
+    /// Page number 1 -> ....
+    /// Page size > 0 
+    /// </summary>
+    /// <param name="dto"></param>
+    /// <returns></returns>
 
     [HttpGet]
     [Authorize(roles: Roles.ShopeOwner)]

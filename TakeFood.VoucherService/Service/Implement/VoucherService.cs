@@ -122,6 +122,10 @@ public class VouchersService : IVoucherService
     {
         var store = await storeRepository.FindOneAsync(x => x.OwnerId == uid);
         var filter = CreateFilter(dto.StartDate, dto.EndDate, dto.QueryString, dto.QueryType, store.Id);
+        if (dto.PageNumber <= 0 || dto.PageSize <= 0)
+        {
+            throw new Exception("Pagenumber or pagesize can not be  zero or negative");
+        }
         var rs = await voucherRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
         var list = new List<VoucherCardDto>();
         foreach (var voucher in rs.Data)
@@ -175,6 +179,6 @@ public class VouchersService : IVoucherService
         {
             throw new Exception("Can't delete voucher");
         }
-        await voucherRepository.DeleteAsync(voucher);
+        await voucherRepository.DeleteAsync(voucher.Id);
     }
 }
