@@ -144,6 +144,18 @@ public class VouchersService : IVoucherService
                 Code = voucher.Code,
             });
         }
+        switch (dto.SortBy)
+        {
+            case "CreateDate": list = list.OrderBy(x => x.CreateDate).ToList(); break;
+            case "StartDate": list = list.OrderBy(x => x.StartDate).ToList(); break;
+            case "EndDate": list = list.OrderBy(x => x.EndDate).ToList(); break;
+            case "Name": list = list.OrderBy(x => x.Name).ToList(); break;
+            case "Code": list = list.OrderBy(x => x.Code).ToList(); break;
+        }
+        switch (dto.SortType)
+        {
+            case "Desc": list.Reverse(); break;
+        }
         var info = new VoucherPagingResponse()
         {
             Total = rs.Count,
