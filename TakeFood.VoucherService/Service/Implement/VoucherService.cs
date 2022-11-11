@@ -61,7 +61,7 @@ public class VouchersService : IVoucherService
     public async Task<List<VoucherCardDto>> GetAllStoreVoucherOkeAsync(string storeId)
     {
         var now = DateTime.Now;
-        var listVoucher = await voucherRepository.FindAsync(x => (x.StoreId == storeId && x.StartDay <= now && x.ExpireDay <= now) || x.Type == true); // Lay voucher cua cua hang hoac voucher cua he thong
+        var listVoucher = await voucherRepository.FindAsync(x => (x.StoreId == storeId && x.StartDay <= now && x.ExpireDay >= now) || x.Type == true); // Lay voucher cua cua hang hoac voucher cua he thong
         var rs = new List<VoucherCardDto>();
         foreach (var voucher in listVoucher)
         {
