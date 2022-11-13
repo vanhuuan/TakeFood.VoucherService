@@ -249,7 +249,7 @@ public class VouchersService : IVoucherService
             filter &= Builders<Voucher>.Filter.Gte(x => x.StartDay, startDate);
             filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, endDate);
         }
-        if (queryType == "All")
+        if (queryType != "All")
         {
             switch (queryType)
             {
