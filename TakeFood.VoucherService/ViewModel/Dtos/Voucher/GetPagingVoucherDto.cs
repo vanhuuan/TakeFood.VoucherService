@@ -23,8 +23,8 @@ public class GetPagingVoucherDto
     /// <summary>
     /// Text to search
     /// </summary>
-    [Required]
     [FromQuery]
+    [Required]
     public String QueryString { get; set; }
     /// <summary>
     /// CreateDate StartDate EndDate Name Code

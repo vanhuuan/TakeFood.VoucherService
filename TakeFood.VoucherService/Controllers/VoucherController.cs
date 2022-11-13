@@ -104,6 +104,26 @@ public class VoucherController : BaseController
         }
     }
 
+    [HttpGet]
+    [Authorize(roles: Roles.Admin)]
+    [Route("GetPagingSystemVoucher")]
+    public async Task<IActionResult> GetPagingSystemVoucherAsync(GetPagingVoucherDto dto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var rs = await VoucherService.GetPagingSystemVoucher(dto);
+            return Ok(rs);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpDelete]
     [Authorize(roles: Roles.ShopeOwner)]
     [Route("DeleteVoucher")]

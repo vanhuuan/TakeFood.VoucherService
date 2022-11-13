@@ -193,4 +193,71 @@ public class VouchersService : IVoucherService
         }
         await voucherRepository.DeleteAsync(voucher.Id);
     }
+
+    public async Task<VoucherPagingResponse> GetPagingSystemVoucher(GetPagingVoucherDto dto)
+    {
+        var filter = CreateSystemFilter(dto.StartDate, dto.EndDate, dto.QueryString, dto.QueryType);
+        if (dto.PageNumber <= 0 || dto.PageSize <= 0)
+        {
+            throw new Exception("Pagenumber or pagesize can not be  zero or negative");
+        }
+        var rs = await voucherRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
+        var list = new List<VoucherCardDto>();
+        foreach (var voucher in rs.Data)
+        {
+            list.Add(new VoucherCardDto()
+            {
+                MaxDiscount = voucher.MaxDiscount,
+                MinSpend = voucher.MinSpend,
+                Amount = voucher.Amount,
+                Description = voucher.Description,
+                Name = voucher.Name,
+                VoucherId = voucher.Id,
+                CreateDate = voucher.CreatedDate!.Value,
+                StartDate = voucher.StartDay,
+                EndDate = voucher.ExpireDay,
+                Code = voucher.Code,
+            });
+        }
+        switch (dto.SortBy)
+        {
+            case "CreateDate": list = list.OrderBy(x => x.CreateDate).ToList(); break;
+            case "StartDate": list = list.OrderBy(x => x.StartDate).ToList(); break;
+            case "EndDate": list = list.OrderBy(x => x.EndDate).ToList(); break;
+            case "Name": list = list.OrderBy(x => x.Name).ToList(); break;
+            case "Code": list = list.OrderBy(x => x.Code).ToList(); break;
+        }
+        switch (dto.SortType)
+        {
+            case "Desc": list.Reverse(); break;
+        }
+        var info = new VoucherPagingResponse()
+        {
+            Total = rs.Count,
+            PageIndex = dto.PageNumber,
+            PageSize = dto.PageSize,
+            Cards = list
+        };
+        return info;
+    }
+
+    private FilterDefinition<Voucher> CreateSystemFilter(DateTime? startDate, DateTime? endDate, string query, string queryType)
+    {
+        var filter = Builders<Voucher>.Filter.Eq(x => x.Type, true);
+        if (startDate != null && endDate != null)
+        {
+            filter &= Builders<Voucher>.Filter.Gte(x => x.StartDay, startDate);
+            filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, endDate);
+        }
+        if (queryType == "All")
+        {
+            switch (queryType)
+            {
+                case "Code": filter &= Builders<Voucher>.Filter.Where(x => x.Code.Contains(query)); break;
+                case "Name": filter &= Builders<Voucher>.Filter.Where(x => x.Name.Contains(query)); break;
+                default: filter &= Builders<Voucher>.Filter.StringIn(x => x.Code, query); break;
+            }
+        }
+        return filter;
+    }
 }
