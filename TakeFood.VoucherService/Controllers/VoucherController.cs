@@ -38,6 +38,26 @@ public class VoucherController : BaseController
         }
     }
 
+    [HttpPost]
+    [Authorize(roles: Roles.Admin)]
+    [Route("AddSystemVoucher")]
+    public async Task<IActionResult> AddSystemVoucherAsync([FromBody] CreateVoucherDto dto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await VoucherService.CreateSystemVoucherAsync(dto);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpPut]
     [Authorize(roles: Roles.ShopeOwner)]
     [Route("UpdateVoucher")]

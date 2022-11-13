@@ -58,6 +58,41 @@ public class VouchersService : IVoucherService
         await voucherRepository.InsertAsync(voucher);
     }
 
+    public async Task CreateSystemVoucherAsync(CreateVoucherDto dto)
+    {
+        var checkCode = await voucherRepository.FindOneAsync(x => x.Code == dto.Code);
+        if (checkCode != null)
+        {
+            throw new Exception("Code existed");
+        }
+
+        if (dto.StartDay < DateTime.Now || dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
+        {
+            throw new Exception("Unexecpted Datetime");
+        }
+
+        if (dto.Amount <= 0 || dto.MaxDiscount <= 0 || dto.MinSpend < 0)
+        {
+            throw new Exception("Money can't not be negative");
+        }
+
+        var voucher = new Voucher()
+        {
+            Amount = dto.Amount,
+            StoreId = "0",
+            StartDay = dto.StartDay,
+            ExpireDay = dto.ExpireDay,
+            Code = dto.Code,
+            Description = dto.Description,
+            MaxDiscount = dto.MaxDiscount,
+            MinSpend = dto.MinSpend,
+            Name = dto.Name,
+            Type = true
+        };
+
+        await voucherRepository.InsertAsync(voucher);
+    }
+
     public async Task<List<VoucherCardDto>> GetAllStoreVoucherOkeAsync(string storeId)
     {
         var now = DateTime.Now;
