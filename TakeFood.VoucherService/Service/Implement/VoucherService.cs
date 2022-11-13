@@ -231,6 +231,13 @@ public class VouchersService : IVoucherService
         {
             case "Desc": list.Reverse(); break;
         }
+        int stt = 0;
+        foreach (var i in list)
+        {
+            stt++;
+            i.Id = stt;
+            i.Stt = stt;
+        }
         var info = new VoucherPagingResponse()
         {
             Total = rs.Count,
