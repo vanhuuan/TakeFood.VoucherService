@@ -8,6 +8,18 @@ public class VoucherCardDto
     /// <summary>
     /// Voucher Id
     /// </summary>
+    [JsonPropertyName("stt")]
+    [Required]
+    public int Stt { get; set; }
+    /// <summary>
+    /// Voucher Id
+    /// </summary>
+    [JsonPropertyName("id")]
+    [Required]
+    public int Id { get; set; }
+    /// <summary>
+    /// Voucher Id
+    /// </summary>
     [JsonPropertyName("voucherId")]
     [Required]
     public string VoucherId { get; set; }
