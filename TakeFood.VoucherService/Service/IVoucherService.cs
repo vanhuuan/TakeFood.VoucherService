@@ -11,5 +11,6 @@ public interface IVoucherService
     Task<List<VoucherCardDto>> GetAllStoreVoucherOkeAsync(string storeId);
     Task<VoucherPagingResponse> GetPagingVoucher(GetPagingVoucherDto dto, string ownerId);
     Task<VoucherPagingResponse> GetPagingSystemVoucher(GetPagingVoucherDto dto);
+    Task<VoucherPagingResponse> GetPagingStoreVoucher(GetPagingVoucherDto dto, string storeID, string status);
      
 }

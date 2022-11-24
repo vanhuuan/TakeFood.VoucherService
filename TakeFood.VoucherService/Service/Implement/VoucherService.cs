@@ -292,6 +292,75 @@ public class VouchersService : IVoucherService
             filter &= Builders<Voucher>.Filter.Gte(x => x.StartDay, startDate);
             filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, endDate);
         }
+            switch (queryType)
+            {
+                case "Code": filter &= Builders<Voucher>.Filter.Where(x => x.Code.Contains(query)); break;
+                case "Name": filter &= Builders<Voucher>.Filter.Where(x => x.Name.Contains(query)); break;
+                default: filter &= Builders<Voucher>.Filter.StringIn(x => x.Code, query); break;
+            }
+        return filter;
+    }
+
+    public async Task<VoucherPagingResponse> GetPagingStoreVoucher(GetPagingVoucherDto dto, string storeID, string status)
+    {
+        if (status != "Expired" && status != "Using") status = "";
+        var filter = CreateStoreFilter(dto.StartDate, dto.EndDate,storeID, status, dto.QueryString, dto.QueryType);
+        if (dto.PageNumber <= 0 || dto.PageSize <= 0)
+        {
+            throw new Exception("Pagenumber or pagesize can not be  zero or negative");
+        }
+        var rs = await voucherRepository.GetPagingAsync(filter, dto.PageNumber - 1, dto.PageSize);
+        var list = new List<VoucherCardDto>();
+        foreach (var voucher in rs.Data)
+        {
+            list.Add(new VoucherCardDto()
+            {
+                MaxDiscount = voucher.MaxDiscount,
+                MinSpend = voucher.MinSpend,
+                Amount = voucher.Amount,
+                Description = voucher.Description,
+                Name = voucher.Name,
+                VoucherId = voucher.Id,
+                CreateDate = voucher.CreatedDate!.Value,
+                StartDate = voucher.StartDay,
+                EndDate = voucher.ExpireDay,
+                Code = voucher.Code,
+                Type = voucher.Type
+            });
+        }
+        switch (dto.SortBy)
+        {
+            case "CreateDate": list = list.OrderBy(x => x.CreateDate).ToList(); break;
+            case "StartDate": list = list.OrderBy(x => x.StartDate).ToList(); break;
+            case "EndDate": list = list.OrderBy(x => x.EndDate).ToList(); break;
+            case "Name": list = list.OrderBy(x => x.Name).ToList(); break;
+            case "Code": list = list.OrderBy(x => x.Code).ToList(); break;
+        }
+        switch (dto.SortType)
+        {
+            case "Desc": list.Reverse(); break;
+        }
+        var info = new VoucherPagingResponse()
+        {
+            Total = rs.Count,
+            PageIndex = dto.PageNumber,
+            PageSize = dto.PageSize,
+            Cards = list
+        };
+        return info;
+
+    }
+
+    private FilterDefinition<Voucher> CreateStoreFilter(DateTime? startDate, DateTime? endDate, string storeID, string status, string query, string queryType)
+    {
+        var filter = Builders<Voucher>.Filter.Eq(x => x.StoreId, storeID);
+        if(status == "Expired") filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, DateTime.Now);
+        if(status == "Using") filter &= Builders<Voucher>.Filter.Gte(x => x.ExpireDay, DateTime.Now);
+        if (startDate != null && endDate != null)
+        {
+            filter &= Builders<Voucher>.Filter.Gte(x => x.StartDay, startDate);
+            filter &= Builders<Voucher>.Filter.Lte(x => x.ExpireDay, endDate);
+        }
         if (queryType != "All")
         {
             switch (queryType)
