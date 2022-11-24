@@ -177,6 +177,7 @@ public class VouchersService : IVoucherService
                 StartDate = voucher.StartDay,
                 EndDate = voucher.ExpireDay,
                 Code = voucher.Code,
+                Type = voucher.Type
             });
         }
         switch (dto.SortBy)

@@ -58,4 +58,6 @@ public class VoucherCardDto
     public DateTime CreateDate { get; set; }
     [JsonPropertyName("updateDate")]
     public DateTime UpdateDate { get; set; }
+    [JsonPropertyName("type")]
+    public bool Type { get; set; }
 }
