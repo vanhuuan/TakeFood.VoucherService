@@ -179,6 +179,20 @@ public class VoucherController : BaseController
         }
     }
 
+    [HttpGet]
+    [Route("GetVoucherByID")]
+    public async Task<JsonResult> GetVoucherByID(string ID)
+    {
+        try
+        {
+            var rs = await VoucherService.GetVoucherByID(ID);
+            return new JsonResult(rs);
+        }catch(Exception e)
+        {
+            return new JsonResult(e);
+        }
+    }
+
     public string GetId()
     {
         String token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
