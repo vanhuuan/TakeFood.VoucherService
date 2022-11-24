@@ -2,6 +2,7 @@
 using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 using TakeFood.VoucherService.Model.Entities;
 using TakeFood.VoucherService.Service;
 using TakeFood.VoucherService.ViewModel.Dtos.Voucher;
@@ -161,6 +162,20 @@ public class VoucherController : BaseController
         catch (Exception e)
         {
             return BadRequest(e.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("GetPagingStoreVoucher")]
+    public async Task<JsonResult> GetPagingStoreVoucher([FromQuery] GetPagingVoucherDto dto, string storeID,[Optional] string status)
+    {
+        try
+        {
+            var rs = await VoucherService.GetPagingStoreVoucher(dto, storeID, status);
+            return new JsonResult(rs);
+        }catch(Exception e)
+        {
+            return new JsonResult(e);
         }
     }
 
