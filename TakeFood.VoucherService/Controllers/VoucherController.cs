@@ -126,7 +126,7 @@ public class VoucherController : BaseController
     }
 
     [HttpGet]
-    [Authorize(roles: Roles.Admin)]
+    [Authorize(roles: Roles.Admin| Roles.ShopeOwner)]
     [Route("GetPagingSystemVoucher")]
     public async Task<IActionResult> GetPagingSystemVoucherAsync(GetPagingVoucherDto dto)
     {
