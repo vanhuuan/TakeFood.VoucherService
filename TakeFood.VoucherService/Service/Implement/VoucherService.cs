@@ -372,4 +372,25 @@ public class VouchersService : IVoucherService
         }
         return filter;
     }
+
+    public async Task<UpdateVoucherDto> GetVoucherByID(string id)
+    {
+        Voucher voucher = await voucherRepository.FindByIdAsync(id);
+
+        UpdateVoucherDto updateVoucherDto = new()
+        {
+            VoucherId = voucher.Id,
+            Name = voucher.Name,
+            Description = voucher.Description,
+            MinSpend = voucher.MinSpend,
+            Amount =voucher.Amount,
+            MaxDiscount = voucher.MaxDiscount,
+            StartDay = voucher.StartDay,
+            ExpireDay = voucher.ExpireDay,
+            StoreId = voucher.StoreId,
+            Code = voucher.Code
+        };
+
+        return updateVoucherDto;
+    }
 }
