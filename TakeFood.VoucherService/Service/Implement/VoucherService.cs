@@ -427,7 +427,7 @@ public class VouchersService : IVoucherService
             throw new Exception("Money can't not be negative");
         }
         var voucher = await voucherRepository.FindByIdAsync(dto.VoucherId);
-        if (voucher != null)
+        if (voucher != null && voucher.Type)
         {
             voucher.Name = dto.Name;
             voucher.Amount = dto.Amount;
