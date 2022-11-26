@@ -126,7 +126,7 @@ public class VoucherController : BaseController
     }
 
     [HttpGet]
-    [Authorize(roles: Roles.Admin| Roles.ShopeOwner)]
+    [Authorize(roles: Roles.Admin | Roles.ShopeOwner)]
     [Route("GetPagingSystemVoucher")]
     public async Task<IActionResult> GetPagingSystemVoucherAsync(GetPagingVoucherDto dto)
     {
@@ -167,13 +167,14 @@ public class VoucherController : BaseController
 
     [HttpGet]
     [Route("GetPagingStoreVoucher")]
-    public async Task<JsonResult> GetPagingStoreVoucher([FromQuery] GetPagingVoucherDto dto, string storeID,[Optional] string status)
+    public async Task<JsonResult> GetPagingStoreVoucher([FromQuery] GetPagingVoucherDto dto, string storeID, [Optional] string status)
     {
         try
         {
             var rs = await VoucherService.GetPagingStoreVoucher(dto, storeID, status);
             return new JsonResult(rs);
-        }catch(Exception e)
+        }
+        catch (Exception e)
         {
             return new JsonResult(e);
         }
@@ -187,7 +188,8 @@ public class VoucherController : BaseController
         {
             var rs = await VoucherService.GetVoucherByID(ID);
             return new JsonResult(rs);
-        }catch(Exception e)
+        }
+        catch (Exception e)
         {
             return new JsonResult(e);
         }

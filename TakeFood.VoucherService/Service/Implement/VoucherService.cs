@@ -136,6 +136,7 @@ public class VouchersService : IVoucherService
         var voucher = await voucherRepository.FindByIdAsync(dto.VoucherId);
         if (voucher != null)
         {
+            voucher.Name = dto.Name;
             voucher.Amount = dto.Amount;
             voucher.StoreId = store.Id;
             voucher.StartDay = dto.StartDay;
@@ -144,7 +145,6 @@ public class VouchersService : IVoucherService
             voucher.Description = dto.Description;
             voucher.MaxDiscount = dto.MaxDiscount;
             voucher.MinSpend = dto.MinSpend;
-
             await voucherRepository.UpdateAsync(voucher);
         }
         else
@@ -413,5 +413,36 @@ public class VouchersService : IVoucherService
         };
 
         return updateVoucherDto;
+    }
+
+    public async Task UpdateSystemVoucherAsync(UpdateVoucherDto dto)
+    {
+        if (dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
+        {
+            throw new Exception("Unexecpted Datetime");
+        }
+
+        if (dto.Amount <= 0 || dto.MaxDiscount <= 0 || dto.MinSpend < 0)
+        {
+            throw new Exception("Money can't not be negative");
+        }
+        var voucher = await voucherRepository.FindByIdAsync(dto.VoucherId);
+        if (voucher != null)
+        {
+            voucher.Name = dto.Name;
+            voucher.Amount = dto.Amount;
+            voucher.StoreId = "System";
+            voucher.StartDay = dto.StartDay;
+            voucher.ExpireDay = dto.ExpireDay;
+            voucher.Code = dto.Code;
+            voucher.Description = dto.Description;
+            voucher.MaxDiscount = dto.MaxDiscount;
+            voucher.MinSpend = dto.MinSpend;
+            await voucherRepository.UpdateAsync(voucher);
+        }
+        else
+        {
+            throw new Exception("Voucher is not exist");
+        }
     }
 }
