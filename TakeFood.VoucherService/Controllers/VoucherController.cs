@@ -79,6 +79,26 @@ public class VoucherController : BaseController
         }
     }
 
+    [HttpPut]
+    [Authorize(roles: Roles.Admin)]
+    [Route("UpdateSystemVoucher")]
+    public async Task<IActionResult> UpdateSystemVoucherAsync([FromBody] UpdateVoucherDto dto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await VoucherService.UpdateSystemVoucherAsync(dto);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
     [HttpGet]
     [Authorize]
     [Route("GetVoucher")]
