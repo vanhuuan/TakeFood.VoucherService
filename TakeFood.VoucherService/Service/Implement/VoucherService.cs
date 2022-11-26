@@ -66,7 +66,7 @@ public class VouchersService : IVoucherService
             throw new Exception("Code existed");
         }
 
-        if (dto.StartDay < DateTime.Now || dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
+        if (dto.ExpireDay < DateTime.Now || dto.StartDay < dto.StartDay)
         {
             throw new Exception("Unexecpted Datetime");
         }
@@ -443,6 +443,15 @@ public class VouchersService : IVoucherService
         else
         {
             throw new Exception("Voucher is not exist");
+        }
+    }
+
+    public async Task DeleteSystemVoucher(string id)
+    {
+        var voucher = await voucherRepository.FindByIdAsync(id);
+        if (voucher != null && voucher.Type)
+        {
+            await voucherRepository.DeleteAsync(id);
         }
     }
 }

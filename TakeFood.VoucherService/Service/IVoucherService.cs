@@ -14,4 +14,5 @@ public interface IVoucherService
     Task<VoucherPagingResponse> GetPagingSystemVoucher(GetPagingVoucherDto dto);
     Task<VoucherPagingResponse> GetPagingStoreVoucher(GetPagingVoucherDto dto, string storeID, string status);
     Task<UpdateVoucherDto> GetVoucherByID(string id);
+    Task DeleteSystemVoucher(string id);
 }

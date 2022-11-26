@@ -98,6 +98,26 @@ public class VoucherController : BaseController
             return BadRequest(e.Message);
         }
     }
+    [HttpDelete]
+    [Authorize(roles: Roles.Admin)]
+    [Route("DeleteSystemVoucher")]
+    public async Task<IActionResult> DeleteSystemVoucherAsync([FromQuery][Required] string id)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.Values);
+            }
+            await VoucherService.DeleteVoucherAsync(id);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+
 
     [HttpGet]
     [Authorize]
