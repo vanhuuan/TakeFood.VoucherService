@@ -88,7 +88,7 @@ public class VoucherController : BaseController
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState.Values);
             }
             await VoucherService.UpdateSystemVoucherAsync(dto);
             return Ok();
