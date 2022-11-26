@@ -109,7 +109,7 @@ public class VoucherController : BaseController
             {
                 return BadRequest(ModelState.Values);
             }
-            await VoucherService.DeleteVoucherAsync(id);
+            await VoucherService.DeleteSystemVoucher(id);
             return Ok();
         }
         catch (Exception e)
