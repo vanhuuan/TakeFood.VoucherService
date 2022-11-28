@@ -226,8 +226,8 @@ public class VoucherController : BaseController
 
     public string GetId()
     {
-        String token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last()!;
-        return JwtService.GetId(token);
+        String id = HttpContext.Items["Id"]!.ToString()!;
+        return id;
     }
     public string GetId(string token)
     {
