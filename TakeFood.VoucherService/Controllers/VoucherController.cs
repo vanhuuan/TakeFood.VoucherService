@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StoreService.Middleware;
 using StoreService.Service;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
-using TakeFood.VoucherService.Model.Entities;
 using TakeFood.VoucherService.Service;
 using TakeFood.VoucherService.ViewModel.Dtos.Voucher;
 
@@ -20,7 +18,6 @@ public class VoucherController : BaseController
     }
 
     [HttpPost]
-    [Authorize(roles: Roles.ShopeOwner)]
     [Route("AddVoucher")]
     public async Task<IActionResult> AddVoucherAsync([FromBody] CreateVoucherDto dto)
     {
@@ -40,7 +37,6 @@ public class VoucherController : BaseController
     }
 
     [HttpPost]
-    [Authorize(roles: Roles.Admin)]
     [Route("AddSystemVoucher")]
     public async Task<IActionResult> AddSystemVoucherAsync([FromBody] CreateVoucherDto dto)
     {
@@ -60,7 +56,6 @@ public class VoucherController : BaseController
     }
 
     [HttpPut]
-    [Authorize(roles: Roles.ShopeOwner)]
     [Route("UpdateVoucher")]
     public async Task<IActionResult> UpdateVoucherAsync([FromBody] UpdateVoucherDto dto)
     {
@@ -80,7 +75,6 @@ public class VoucherController : BaseController
     }
 
     [HttpPut]
-    [Authorize(roles: Roles.Admin)]
     [Route("UpdateSystemVoucher")]
     public async Task<IActionResult> UpdateSystemVoucherAsync([FromBody] UpdateVoucherDto dto)
     {
@@ -99,7 +93,6 @@ public class VoucherController : BaseController
         }
     }
     [HttpDelete]
-    [Authorize(roles: Roles.Admin)]
     [Route("DeleteSystemVoucher")]
     public async Task<IActionResult> DeleteSystemVoucherAsync([FromQuery][Required] string id)
     {
@@ -120,7 +113,6 @@ public class VoucherController : BaseController
 
 
     [HttpGet]
-    [Authorize]
     [Route("GetVoucher")]
     public async Task<IActionResult> GetVoucherAsync([Required] string storeId)
     {
@@ -146,7 +138,6 @@ public class VoucherController : BaseController
     /// <returns></returns>
 
     [HttpGet]
-    [Authorize(roles: Roles.ShopeOwner)]
     [Route("GetPagingVoucher")]
     public async Task<IActionResult> GetPagingVoucherAsync(GetPagingVoucherDto dto)
     {
@@ -166,7 +157,6 @@ public class VoucherController : BaseController
     }
 
     [HttpGet]
-    [Authorize(roles: Roles.Admin | Roles.ShopeOwner)]
     [Route("GetPagingSystemVoucher")]
     public async Task<IActionResult> GetPagingSystemVoucherAsync(GetPagingVoucherDto dto)
     {
@@ -186,7 +176,6 @@ public class VoucherController : BaseController
     }
 
     [HttpDelete]
-    [Authorize(roles: Roles.ShopeOwner)]
     [Route("DeleteVoucher")]
     public async Task<IActionResult> GetPagingVoucherAsync([Required] string voucherId)
     {
